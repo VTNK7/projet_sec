@@ -30,6 +30,7 @@ liste *pl = &l;
 
 void init(liste *l)
 {
+    l = (liste*)malloc(sizeof(liste));
     l->suivant = NULL;
 }
 
