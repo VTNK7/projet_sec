@@ -1,0 +1,8 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/victormarti/Documents/CodeN7/projects/projet_sec'
+gcc -o  readcmd.o -c readcmd.c -Wall -O
+gcc -o listejob.o -c listejob.c -Wall -O
+gcc -o main.o -c main.c -Wall -O
+gcc -o exe main.o readcmd.o listejob.o 
+make: Leaving directory `/Users/victormarti/Documents/CodeN7/projects/projet_sec'
+ 
