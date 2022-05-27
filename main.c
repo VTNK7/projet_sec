@@ -42,6 +42,10 @@ int main(int argc, char *argv[])
         struct cmdline *commande_utilisateur;
         
         while((commande_utilisateur = readcmd())==NULL);
+        /*
+        if (commande_utilisateur->err != 0){
+            perror("Erreur commande \n");
+        }*/
 
         if (strcmp(commande_utilisateur->seq[0][0], "exit") == 0)
         {
@@ -57,12 +61,41 @@ int main(int argc, char *argv[])
         }
         else if (strcmp(commande_utilisateur->seq[0][0], "sj") == 0)
         {
-            stop_job(pl, atoi(commande_utilisateur->seq[0][1]));
+            char *com_id = commande_utilisateur->seq[0][1];
+            if (com_id == NULL){
+                printf("Veuillez rentrer un identifiant \n");
+            } else {
+                pid_t pid_job = stop_job(pl, atoi(commande_utilisateur->seq[0][1]));
+                kill(pid_job, SIGSTOP);
+            }
+        }
+        else if (strcmp(commande_utilisateur->seq[0][0], "bg") == 0)
+        {
+            char *com_id = commande_utilisateur->seq[0][1];
+            if (com_id == NULL){
+                printf("Veuillez rentrer un identifiant \n");
+            } else {
+                pid_t pid_job = cont_job(pl, atoi(commande_utilisateur->seq[0][1]));
+                kill(pid_job, SIGCONT);
+            }
+        }
+        else if (strcmp(commande_utilisateur->seq[0][0], "fg") == 0)
+        {
+            char *com_id = commande_utilisateur->seq[0][1];
+            if (com_id == NULL){
+                printf("Veuillez rentrer un identifiant \n");
+            } else {
+                pid_t pid_job = cont_job(pl, atoi(commande_utilisateur->seq[0][1]));
+                kill(pid_job, SIGCONT);
+                wait(&status);
+                del_job(pid_job);
+            }
         }
         else
         {
+            
             pid_t pidFils = fork();
-
+            add_job(&pl, new_job(pidFils, commande_utilisateur->seq[0][0]));
             if (pidFils == -1)
             {
                 printf(" Erreur fork \n ");
@@ -72,15 +105,20 @@ int main(int argc, char *argv[])
             if (pidFils == 0)
             { /* fils */
                 int s = execvp(commande_utilisateur->seq[0][0], commande_utilisateur->seq[0]);
-
+                if (s == -1)
+                    { 
+                        printf("%s : Commande inconnue\n", commande_utilisateur->seq[0][0]);
+                        exit(s);
+                    }
                 exit(s); /* bonne pratique : terminer les processus par un exit explicite */
             }
             else
             { /* pere*/
-                add_job(&pl, new_job(pidFils, commande_utilisateur->seq[0][0]));
+                
                 if (commande_utilisateur->backgrounded == 0)
                 {
-                    wait(&status);
+                    int idsuppr = get_id(pidFils);
+                    wait(&status);     
                 }
             }
         }

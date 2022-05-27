@@ -34,11 +34,10 @@ void add_job(liste **l, job j)
     *l = element; /* Le pointeur pointe sur le dernier élément. */
 }
 
-void del_job(pid_t i)
+void del_job(int i)
 {
-    printf("bonspoir");
     liste *l_temp = pl;
-    if (l_temp->job.pid == i)
+    if (l_temp->job.identifiant == i)
     {
         liste *tmp = l_temp->suivant;
         l_temp = tmp;
@@ -47,8 +46,10 @@ void del_job(pid_t i)
     {
         while (l_temp->suivant != NULL)
         {
-            if (l_temp->suivant->job.pid == i)
+            if (l_temp->suivant->job.identifiant == i)
             {
+                printf("iteration");
+
                 liste *tmp = l_temp->suivant->suivant;
                 l_temp->suivant = tmp;
             }
@@ -57,7 +58,8 @@ void del_job(pid_t i)
     pl = l_temp;
 };
 
-void stop_job(liste *l, int i)
+// retourne le pid du job et affiche 0
+pid_t stop_job(liste *l, int i)
 {
     liste *l_temp = l;
 
@@ -66,6 +68,22 @@ void stop_job(liste *l, int i)
         if (l_temp->job.identifiant == i)
         {
             l_temp->job.etat = 0;
+            return l_temp->job.pid;
+        }
+        l_temp = l_temp->suivant;
+    }
+};
+
+pid_t cont_job(liste *l, int i)
+{
+    liste *l_temp = l;
+
+    while (l_temp->suivant != NULL)
+    {
+        if (l_temp->job.identifiant == i)
+        {
+            l_temp->job.etat = 1;
+            return l_temp->job.pid;
         }
         l_temp = l_temp->suivant;
     }
@@ -95,3 +113,30 @@ job new_job(pid_t pidFils, char *cmd)
     strcpy(new_job.commande, cmd);
     return new_job;
 }
+
+int get_id(pid_t pid){
+    liste *l_temp = pl;
+
+    while (l_temp->suivant != NULL)
+    {
+        if (l_temp->job.pid == pid)
+        {
+            return l_temp->job.identifiant;
+        }
+        l_temp = l_temp->suivant;
+    }
+}
+pid_t get_pid(int id){
+    liste *l_temp = pl;
+
+    while (l_temp->suivant != NULL)
+    {
+        if (l_temp->job.identifiant == id)
+        {
+            return l_temp->job.pid;
+        }
+        l_temp = l_temp->suivant;
+    }
+}
+
+
