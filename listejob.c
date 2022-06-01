@@ -20,7 +20,7 @@ void init(liste *l)
 }
 
 
-void add_job(liste **l, job j)
+void add_job(job j)
 {
 
     liste *element = malloc(sizeof(liste));
@@ -29,14 +29,15 @@ void add_job(liste **l, job j)
         exit(EXIT_FAILURE);
     }
     element->job = j;
-    element->suivant = *l;
+    element->suivant = pl;
 
-    *l = element; /* Le pointeur pointe sur le dernier élément. */
+    pl = element; /* Le pointeur pointe sur le dernier élément. */
 }
 
 void del_job(int i)
 {
-    liste *l_temp = pl;
+    liste *l_temp = malloc(sizeof(liste));
+    l_temp = pl;
     if (l_temp->job.identifiant == i)
     {
         liste *tmp = l_temp->suivant;
@@ -48,8 +49,6 @@ void del_job(int i)
         {
             if (l_temp->suivant->job.identifiant == i)
             {
-                printf("iteration");
-
                 liste *tmp = l_temp->suivant->suivant;
                 l_temp->suivant = tmp;
             }
@@ -59,9 +58,10 @@ void del_job(int i)
 };
 
 // retourne le pid du job et affiche 0
-pid_t stop_job(liste *l, int i)
+pid_t stop_job(int i)
 {
-    liste *l_temp = l;
+    liste *l_temp = malloc(sizeof(liste));
+    l_temp = pl;
 
     while (l_temp->suivant != NULL)
     {
@@ -72,11 +72,13 @@ pid_t stop_job(liste *l, int i)
         }
         l_temp = l_temp->suivant;
     }
+    return -1;
 };
 
-pid_t cont_job(liste *l, int i)
+pid_t cont_job(int i)
 {
-    liste *l_temp = l;
+    liste *l_temp = malloc(sizeof(liste));
+    l_temp = pl;
 
     while (l_temp->suivant != NULL)
     {
@@ -87,11 +89,13 @@ pid_t cont_job(liste *l, int i)
         }
         l_temp = l_temp->suivant;
     }
+    return -1;
 };
 
-void show_jobs(liste *l)
+void show_jobs()
 {
-    liste *l_temp = l;
+    liste *l_temp = malloc(sizeof(liste));
+    l_temp = pl;
     printf("id   pid     etat   cmd\n");
     while (l_temp->suivant != NULL)
     {
@@ -115,7 +119,8 @@ job new_job(pid_t pidFils, char *cmd)
 }
 
 int get_id(pid_t pid){
-    liste *l_temp = pl;
+    liste *l_temp = malloc(sizeof(liste));
+    l_temp = pl;
 
     while (l_temp->suivant != NULL)
     {
@@ -125,9 +130,11 @@ int get_id(pid_t pid){
         }
         l_temp = l_temp->suivant;
     }
+    return -1;
 }
 pid_t get_pid(int id){
-    liste *l_temp = pl;
+    liste *l_temp = malloc(sizeof(liste));
+    l_temp = pl;
 
     while (l_temp->suivant != NULL)
     {
@@ -137,6 +144,7 @@ pid_t get_pid(int id){
         }
         l_temp = l_temp->suivant;
     }
+    return -1;
 }
 
 

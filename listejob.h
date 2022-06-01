@@ -22,14 +22,14 @@ struct liste
 
 void init(liste *l);
 
-void add_job(liste **l, job j);
+void add_job(job j);
 
 void del_job(int i);
 
-pid_t stop_job(liste *l, int i);
-pid_t cont_job(liste *l, int i);
+pid_t stop_job(int i);
+pid_t cont_job(int i);
 
-void show_jobs(liste *l);
+void show_jobs();
 
 job new_job(pid_t pidFils, char *cmd);
 pid_t get_pid(int id);
